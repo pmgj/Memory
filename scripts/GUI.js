@@ -84,7 +84,7 @@ class GUI {
             }
             if (ret.end === End.NO) {
                 this.habilitar(false);
-                setTimeout(this.buscar.bind(this), 2000);
+                setTimeout(this.buscar.bind(this), 1000);
             } else {
                 let msg = document.getElementById("message");
                 msg.textContent = "Game over! You win!";
