@@ -51,7 +51,7 @@ export default class MemoryGame {
             cell.show = State.SHOW;
             if (!this.firstCell) {
                 this.firstCell = cell;
-                return { end: End.NO, plays: this.numOfPlays, card1: cell, card2: null };
+                return { end: End.NO, plays: this.numOfPlays, card1: cell, card2: null, show: false };
             } else {
                 this.numOfPlays++;
                 if (this.firstCell.value === cell.value) {
@@ -63,10 +63,10 @@ export default class MemoryGame {
                 }
                 let c1 = this.firstCell, c2 = cell;
                 this.firstCell = null;
-                return { end: this.endOfGame(), plays: this.numOfPlays, card1: c1, card2: c2 };
+                return { end: this.endOfGame(), plays: this.numOfPlays, card1: c1, card2: c2, show: c1.show === State.INVISIBLE };
             }
         }
-        return { end: End.NO, plays: this.numOfPlays, card1: null, card2: null };
+        return { end: End.NO, plays: this.numOfPlays, card1: null, card2: null, show: false };
     }
     endOfGame() {
         return this.board.flat().every(v => v.show === State.INVISIBLE) ? End.YES : End.NO;

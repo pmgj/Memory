@@ -56,13 +56,20 @@ class GUI {
         cells.forEach(elem => elem.onclick = tipo ? this.mostrar.bind(this) : null);
     }
     buscar() {
-        let cells = document.querySelectorAll("td");
-        cells.forEach(elem => elem.style.backgroundImage = "");
+        this.animation(this.card1, "");
+        this.animation(this.card2, "");
         this.card1 = this.card2 = null;
         this.habilitar(true);
     }
     coordinates(cell) {
         return new Cell(cell.parentNode.rowIndex, cell.cellIndex);
+    }
+    animation(cell, img) {
+        cell.dataset.animation = "flip-in";
+        cell.onanimationend = () => {
+            cell.dataset.animation = "flip-out";
+            cell.style.backgroundImage = img;
+        };
     }
     mostrar(evt) {
         let td = evt.currentTarget;
@@ -73,18 +80,19 @@ class GUI {
         }
         if (this.card1 === null) {
             this.card1 = td;
-            td.style.backgroundImage = `url(images/${this.imageSet[ret.card1.value]})`;
+            this.animation(td, `url(images/${this.imageSet[ret.card1.value]})`);
         } else {
             this.card2 = td;
-            td.style.backgroundImage = `url(images/${this.imageSet[ret.card2.value]})`;
-            document.getElementById("plays").textContent = ret.plays;
-            if (this.card1.style.backgroundImage === this.card2.style.backgroundImage) {
+            this.animation(td, `url(images/${this.imageSet[ret.card2.value]})`);
+            let plays = document.getElementById("plays");
+            plays.textContent = ret.plays;
+            if (ret.show) {
                 this.card1.className = "close";
                 this.card2.className = "close";
             }
             if (ret.end === End.NO) {
                 this.habilitar(false);
-                setTimeout(this.buscar.bind(this), 1000);
+                setTimeout(this.buscar.bind(this), 2000);
             } else {
                 let msg = document.getElementById("message");
                 msg.textContent = "Game over! You win!";
@@ -113,7 +121,7 @@ class GUI {
                 cell.onclick = this.mostrar.bind(this);
             }
         }
-        diff.onchange = this.init.bind(this);
+        diff.onchange = this.start.bind(this);
         let msg = document.getElementById("message");
         msg.textContent = "";
     }

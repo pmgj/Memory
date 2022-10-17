@@ -11,8 +11,9 @@ td {
     width: 80px;
     height: 80px;
     border: 1px solid black;
-    transition: opacity 1s ease-in;
+    transition: opacity 2s ease-in;
     background-image: url(images/x.png);
+    background-repeat: no-repeat;
     opacity: 1;
 }
 
@@ -22,4 +23,33 @@ p {
 
 .close {
     opacity: 0;
+}
+
+@keyframes FlipIn {
+    0% {
+        transform: rotateX(0);
+    }
+    100% {
+        transform: rotateX(-90deg);        
+    }
+}
+
+@keyframes FlipOut {
+    0% {
+        transform: rotateX(-90deg);
+    }
+    100% {
+        transform: rotateX(0);        
+    }
+}
+
+td[data-animation="flip-in"] {
+    animation-name: FlipIn;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+}
+td[data-animation="flip-out"] {
+    animation-name: FlipOut;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
 }
