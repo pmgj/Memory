@@ -1,0 +1,25 @@
+table {
+    margin: 0 auto;
+}
+
+caption {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+td {
+    width: 80px;
+    height: 80px;
+    border: 1px solid black;
+    transition: opacity 1s ease-in;
+    background-image: url(../images/x.png);
+    opacity: 1;
+}
+
+p {
+    text-align: center;
+}
+
+.close {
+    opacity: 0;
+}

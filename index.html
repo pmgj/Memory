@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Memory</title>
+    <script type="module" src="scripts/GUI.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="icon" type="image/png" href="../images/memory-game-icon.png" />
+</head>
+
+<body>
+    <table>
+        <caption>Memory</caption>
+        <tbody></tbody>
+    </table>
+    <form action="#">
+        <p>Difficulty:
+            <select id="diff">
+                <option value="10">Easy</option>
+                <option value="20">Intermediate</option>
+                <option value="40">Advanced</option>
+            </select>
+            <button id="start">Start</button>
+        </p>
+    </form>
+    <p>Number of plays: <strong id="plays"></strong></p>
+    <p id="message"></p>
+</body>
+
+</html>
