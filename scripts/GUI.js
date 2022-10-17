@@ -73,10 +73,10 @@ class GUI {
         }
         if (this.card1 === null) {
             this.card1 = td;
-            td.style.backgroundImage = `url(images/${this.imageSet[ret.card1.value]})`;
+            td.style.backgroundImage = `url(../images/${this.imageSet[ret.card1.value]})`;
         } else {
             this.card2 = td;
-            td.style.backgroundImage = `url(images/${this.imageSet[ret.card2.value]})`;
+            td.style.backgroundImage = `url(../images/${this.imageSet[ret.card2.value]})`;
             document.getElementById("plays").textContent = ret.plays;
             if (this.card1.style.backgroundImage === this.card2.style.backgroundImage) {
                 this.card1.className = "close";
