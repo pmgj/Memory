@@ -75,7 +75,7 @@ class GUI {
         let td = evt.currentTarget;
         let cell = this.coordinates(td);
         let ret = this.game.play(cell);
-        if (this.card1 === td) {
+        if (this.card1 === td || (ret.card1 === null && ret.card2 === null)) {
             return;
         }
         if (this.card1 === null) {
