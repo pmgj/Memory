@@ -12,7 +12,7 @@ td {
     height: 80px;
     border: 1px solid black;
     transition: opacity 1s ease-in;
-    background-image: url(../images/x.png);
+    background-image: url(images/x.png);
     opacity: 1;
 }
 
