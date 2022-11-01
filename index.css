@@ -8,12 +8,14 @@ caption {
 }
 
 td {
-    width: 80px;
-    height: 80px;
+    --cell-size: 8vmin;
+    width: clamp(30px, var(--cell-size), 50px);
+    height: clamp(30px, var(--cell-size), 50px);    
     border: 1px solid black;
     transition: opacity 2s ease-in;
     background-image: url(images/x.png);
     background-repeat: no-repeat;
+    background-size: clamp(30px, var(--cell-size), 50px);
     opacity: 1;
 }
 
@@ -29,8 +31,9 @@ p {
     0% {
         transform: rotateX(0);
     }
+
     100% {
-        transform: rotateX(-90deg);        
+        transform: rotateX(-90deg);
     }
 }
 
@@ -38,8 +41,9 @@ p {
     0% {
         transform: rotateX(-90deg);
     }
+
     100% {
-        transform: rotateX(0);        
+        transform: rotateX(0);
     }
 }
 
@@ -48,6 +52,7 @@ td[data-animation="flip-in"] {
     animation-duration: 250ms;
     animation-timing-function: ease-in;
 }
+
 td[data-animation="flip-out"] {
     animation-name: FlipOut;
     animation-duration: 250ms;
