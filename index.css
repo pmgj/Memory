@@ -1,10 +1,18 @@
 table {
     margin: 0 auto;
+    border-collapse: separate;
+}
+
+form {
+    width: 320px;
 }
 
 caption {
     font-size: xx-large;
     font-weight: bold;
+    caption-side: top;
+    text-align: center;
+    color: black;
 }
 
 td {
