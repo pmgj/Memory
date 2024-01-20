@@ -16,14 +16,16 @@ caption {
 }
 
 td {
-    --cell-size: 8vmin;
-    width: clamp(30px, var(--cell-size), 50px);
-    height: clamp(30px, var(--cell-size), 50px);    
+    --cell-size: 15vmin;
+    --min-width: 40px;
+    --max-width: 70px;
+    width: clamp(var(--min-width), var(--cell-size), var(--max-width));
+    height: clamp(var(--min-width), var(--cell-size), var(--max-width));
     border: 1px solid black;
     transition: opacity 2s ease-in;
     background-image: url(images/x.png);
     background-repeat: no-repeat;
-    background-size: clamp(30px, var(--cell-size), 50px);
+    background-size: clamp(var(--min-width), var(--cell-size), var(--max-width));
     opacity: 1;
 }
 

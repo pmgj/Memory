@@ -17,19 +17,21 @@
         <caption>Memory</caption>
         <tbody></tbody>
     </table>
-    <form action="#" class="row row-cols-lg-auto g-3 align-items-center my-2 mx-auto">
-        <div class="col-12">
-            <label>Difficulty:</label>
-        </div>
-        <div class="col-12">
-            <select id="diff" class="form-select">
-                <option value="10">Easy</option>
-                <option value="20">Intermediate</option>
-                <option value="40">Advanced</option>
-            </select>
-        </div>
-        <div class="col-12">
-            <button id="start" class="btn btn-primary">Start</button>
+    <form action="#" class="container mb-2">
+        <div class="d-flex justify-content-center mt-2">
+            <div class="p-2 mt-2">
+                <label for="diff">Difficulty:</label>
+            </div>
+            <div class="p-2">
+                <select id="diff" class="form-select">
+                    <option value="10">Easy</option>
+                    <option value="20">Intermediate</option>
+                    <option value="40">Advanced</option>
+                </select>
+            </div>
+            <div class="p-2">
+                <button id="start" class="btn btn-primary">Start</button>
+            </div>
         </div>
     </form>
     <p>Number of plays: <strong id="plays"></strong></p>
