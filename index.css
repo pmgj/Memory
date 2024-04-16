@@ -1,31 +1,20 @@
 table {
     margin: 0 auto;
     border-collapse: separate;
+    cursor: default;
 }
 
 form {
     width: 320px;
 }
 
-caption {
-    font-size: xx-large;
-    font-weight: bold;
-    caption-side: top;
-    text-align: center;
-    color: black;
+td {
+    border: 1px solid black;
+    font-size: 50px;
 }
 
-td {
-    --cell-size: 15vmin;
-    --min-width: 40px;
-    --max-width: 70px;
-    width: clamp(var(--min-width), var(--cell-size), var(--max-width));
-    height: clamp(var(--min-width), var(--cell-size), var(--max-width));
-    border: 1px solid black;
+td div {
     transition: opacity 2s ease-in;
-    background-image: url(images/x.png);
-    background-repeat: no-repeat;
-    background-size: clamp(var(--min-width), var(--cell-size), var(--max-width));
     opacity: 1;
 }
 
@@ -57,13 +46,13 @@ p {
     }
 }
 
-td[data-animation="flip-in"] {
+td div[data-animation="flip-in"] {
     animation-name: FlipIn;
     animation-duration: 250ms;
     animation-timing-function: ease-in;
 }
 
-td[data-animation="flip-out"] {
+td div[data-animation="flip-out"] {
     animation-name: FlipOut;
     animation-duration: 250ms;
     animation-timing-function: ease-in;

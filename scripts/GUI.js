@@ -8,56 +8,16 @@ class GUI {
         this.game = new MemoryGame();
         this.card1 = null;
         this.card2 = null;
-        this.imageSet = [
-            "brasao-abc-1383080810897_80x80.png",
-            "brasao-america-mg-1383080847296_80x80.png",
-            "brasao-america-rn-1383080869267_80x80.png",
-            "brasao-atletico-go-1383080920254_80x80.png",
-            "brasao-atletico-mg-1383012954563_80x80.png",
-            "brasao-atletico-pr-1383012934593_80x80.png",
-            "brasao-avai-1383080947570_80x80.png",
-            "brasao-bahia-1383012989687_80x80.png",
-            "brasao-boa-1383081053755_80x80.png",
-            "brasao-botafogo-1383012764678_80x80.png",
-            "brasao-bragantino-1383081085382_80x80.png",
-            "brasao-ceara-1383081156590_80x80.png",
-            "brasao-chapecoense-1383081240819_80x80.png",
-            "brasao-corinthians-1383013079679_80x80.png",
-            "brasao-coritiba-1383013134670_80x80.png",
-            "brasao-criciuma-1383013096968_80x80.png",
-            "brasao-cruzeiro-1383012800767_80x80.png",
-            "brasao-figueirense-1383081262573_80x80.png",
-            "brasao-flamengo-1383013182930_80x80.png",
-            "brasao-fluminense-1384196872174_80x80.png",
-            "brasao-goias-1383012842853_80x80.png",
-            "brasao-gremio-1383012821050_80x80.png",
-            "brasao-icasa-1383081304822_80x80.png",
-            "brasao-inter-1383012732937_80x80.png",
-            "brasao-joinville-1383081323459_80x80.png",
-            "brasao-luverdense-1385556774354_80x80.png",
-            "brasao-nautico-1383013061647_80x80.png",
-            "brasao-oeste-1383081343643_80x80.png",
-            "brasao-palmeiras-1383081365846_80x80.png",
-            "brasao-parana-1383081388556_80x80.png",
-            "brasao-ponte-preta-1383013043294_80x80.png",
-            "brasao-portuguesa-1383013161974_80x80.png",
-            "brasao-sampaio-correa-1385557566647_80x80.png",
-            "brasao-santa-cruz-1385557594638_80x80.png",
-            "brasao-santos-1383012712997_80x80.png",
-            "brasao-sao-paulo-1383012783800_80x80.png",
-            "brasao-sport-1383081509432_80x80.png",
-            "brasao-vasco-1383013201926_80x80.png",
-            "brasao-vila-nova-go-1385557637575_80x80.png",
-            "brasao-vitoria-1383012971846_80x80.png"
-        ];    
+        this.imageSet = new Array(30).fill(0).map((e, i) => `&#${i + 128000};`);
+        this.defaultImage = "&#128529;";
     }
     habilitar(tipo) {
         let cells = document.querySelectorAll("td");
         cells.forEach(elem => elem.onclick = tipo ? this.mostrar.bind(this) : null);
     }
     buscar() {
-        this.animation(this.card1, "");
-        this.animation(this.card2, "");
+        this.animation(this.card1.firstChild, this.defaultImage);
+        this.animation(this.card2.firstChild, this.defaultImage);
         this.card1 = this.card2 = null;
         this.habilitar(true);
     }
@@ -68,7 +28,7 @@ class GUI {
         cell.dataset.animation = "flip-in";
         cell.onanimationend = () => {
             cell.dataset.animation = "flip-out";
-            cell.style.backgroundImage = img;
+            cell.innerHTML = img;
         };
     }
     mostrar(evt) {
@@ -80,15 +40,15 @@ class GUI {
         }
         if (this.card1 === null) {
             this.card1 = td;
-            this.animation(td, `url(images/${this.imageSet[ret.card1.value]})`);
+            this.animation(td.firstChild, this.imageSet[ret.card1.value]);
         } else {
             this.card2 = td;
-            this.animation(td, `url(images/${this.imageSet[ret.card2.value]})`);
+            this.animation(td.firstChild, this.imageSet[ret.card2.value]);
             let plays = document.getElementById("plays");
             plays.textContent = ret.plays;
             if (ret.show) {
-                this.card1.className = "close";
-                this.card2.className = "close";
+                this.card1.firstChild.className = "close";
+                this.card2.firstChild.className = "close";
             }
             if (ret.end === End.NO) {
                 this.habilitar(false);
@@ -104,7 +64,8 @@ class GUI {
         start.onclick = this.start.bind(this);
         this.start();
     }
-    start() {
+    start(evt) {
+        evt?.preventDefault();
         shuffleArray(this.imageSet);
         this.card1 = null;
         this.card2 = null;
@@ -118,6 +79,9 @@ class GUI {
             let tr = table.insertRow(i);
             for (let j = 0; j < board[i].length; j++) {
                 let cell = tr.insertCell(j);
+                let div = document.createElement("div");
+                div.innerHTML = this.defaultImage;
+                cell.appendChild(div);
                 cell.onclick = this.mostrar.bind(this);
             }
         }
