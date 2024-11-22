@@ -47,7 +47,6 @@ class GUI {
         if (!(this.card1.firstChild instanceof HTMLDivElement) || !(this.card2.firstChild instanceof HTMLDivElement)) {
             throw new Error();
         }
-        let td1
         this.animation(this.card1.firstChild, this.defaultImage);
         this.animation(this.card2.firstChild, this.defaultImage);
         this.card1 = this.card2 = null;

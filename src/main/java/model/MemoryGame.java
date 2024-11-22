@@ -8,7 +8,7 @@ public class MemoryGame {
     private int rows;
     private int cols;
     private Data[][] board;
-    private Cell firstCell;
+    private Data firstCell;
     private Player turn;
     private int score1;
     private int score2;
@@ -33,13 +33,13 @@ public class MemoryGame {
             for (var j = 0; j < this.cols; j++) {
                 switch (this.board[i][j].getShow()) {
                     case State.HIDDEN:
-                        clone[i][j] = new Data(-1, State.HIDDEN);
+                        clone[i][j] = new Data(-1, State.HIDDEN, new Cell(i, j));
                         break;
                     case State.SHOW:
-                        clone[i][j] = new Data(board[i][j].getValue(), State.SHOW);
+                        clone[i][j] = new Data(board[i][j].getValue(), State.SHOW, new Cell(i, j));
                         break;
                     case State.INVISIBLE:
-                        clone[i][j] = new Data(-1, State.INVISIBLE);
+                        clone[i][j] = new Data(-1, State.INVISIBLE, new Cell(i, j));
                         break;
                 }
             }
@@ -66,7 +66,7 @@ public class MemoryGame {
         shuffleArray(set);
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                this.board[i][j] = new Data(set[cols * i + j], State.HIDDEN);
+                this.board[i][j] = new Data(set[cols * i + j], State.HIDDEN, new Cell(i, j));
             }
         }
         return this.getBoard();
@@ -83,7 +83,7 @@ public class MemoryGame {
     }
 
     public Winner getWinner() {
-        if (Arrays.stream(this.board).flatMap(o -> Arrays.stream(o)).allMatch(v -> v.getShow() == State.INVISIBLE)) {
+        if (this.board != null && Arrays.stream(this.board).flatMap(o -> Arrays.stream(o)).allMatch(v -> v.getShow() == State.INVISIBLE)) {
             return this.score1 > this.score2 ? Winner.PLAYER1
                     : this.score1 < this.score2 ? Winner.PLAYER2 : Winner.DRAW;
         }
@@ -103,24 +103,23 @@ public class MemoryGame {
         }
         cell.setShow(State.SHOW);
         if (this.firstCell == null) {
-            this.firstCell = coords;
-            return new Result(coords, null, false);
+            this.firstCell = cell;
+            return new Result(cell, null, false);
         } else {
-            Data temp = this.board[this.firstCell.x()][this.firstCell.y()];
-            if (temp.getValue() == cell.getValue()) {
+            if (this.firstCell.getValue() == cell.getValue()) {
                 if (this.turn == Player.PLAYER1) {
                     this.score1++;
                 } else {
                     this.score2++;
                 }
                 cell.setShow(State.INVISIBLE);
-                temp.setShow(State.INVISIBLE);
+                this.firstCell.setShow(State.INVISIBLE);
             } else {
                 cell.setShow(State.HIDDEN);
-                temp.setShow(State.HIDDEN);
+                this.firstCell.setShow(State.HIDDEN);
             }
             var c1 = this.firstCell;
-            var c2 = coords;
+            var c2 = cell;
             this.firstCell = null;
             this.turn = this.turn == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1;
             return new Result(c1, c2, cell.getShow() == State.INVISIBLE);

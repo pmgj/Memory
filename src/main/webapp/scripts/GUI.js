@@ -15,37 +15,47 @@ class GUI {
         let message = document.getElementById("message");
         message.innerHTML = msg;
     }
-    animation(cell, img) {
-        cell.dataset.animation = "flip-in";
-        cell.onanimationend = () => {
-            cell.dataset.animation = "flip-out";
-            cell.innerHTML = img;
+    animation(div, img) {
+        div.dataset.animation = "flip-in";
+        div.onanimationend = () => {
+            div.dataset.animation = "flip-out";
+            div.innerHTML = img;
         };
     }
     getTableCell(cell) {
         let table = document.querySelector("table#board tbody");
         return table.rows[cell.x].cells[cell.y];
     }
+    habilitar(tipo) {
+        let cells = document.querySelectorAll("table#board tbody td");
+        cells.forEach(elem => elem.onclick = tipo ? this.play.bind(this) : null);
+    }
+    buscar(div1, div2) {
+        this.animation(div1, this.defaultImage);
+        this.animation(div2, this.defaultImage);
+        this.habilitar(true);
+    }
     mostrar(data) {
+        // if (data instanceof PointerEvent) {
+        //     return;
+        // }
         let ret = data.result;
-        let td = evt.currentTarget;
-        if (ret.card1 === null) {
-            this.animation(this.getTableCell(ret.card1), this.imageSet[ret.card1.value]);
+        if (ret.card2 === undefined) {
+            this.animation(this.getTableCell(ret.card1.cell).firstChild, this.imageSet[ret.card1.value]);
         } else {
-            this.card2 = td;
-            this.animation(td.firstChild, this.imageSet[ret.card2.value]);
-            let plays = document.getElementById("plays");
-            if (plays) plays.textContent = `${ret.plays}`;
+            this.animation(this.getTableCell(ret.card2.cell).firstChild, this.imageSet[ret.card2.value]);
+            let td1 = this.getTableCell(ret.card1.cell);
+            let td2 = this.getTableCell(ret.card2.cell);
             if (ret.show) {
-                this.card1.firstChild.className = "close";
-                this.card2.firstChild.className = "close";
+                td1.firstChild.className = "close";
+                td2.firstChild.className = "close";
             }
-            if (ret.end === End.NO) {
+            if (data.game.winner === "NONE") {
                 this.habilitar(false);
-                setTimeout(this.buscar.bind(this), 2000);
+                setTimeout(this.buscar.bind(this, td1.firstChild, td2.firstChild), 2000);
             } else {
                 let msg = document.getElementById("message");
-                if (msg) msg.textContent = "Game over! You win!";
+                msg.textContent = "Game over! You win!";
             }
         }
     }
@@ -62,7 +72,7 @@ class GUI {
             case "MESSAGE":
                 /* Recebendo o tabuleiro modificado */
                 if (data.result) {
-                    mostrar(data);
+                    this.mostrar(data);
                 } else {
                     this.printBoard(data.game);
                 }
@@ -116,18 +126,11 @@ class GUI {
             let tr = document.createElement("tr");
             for (let j = 0; j < matrix[i].length; j++) {
                 let td = document.createElement("td");
-                td.innerHTML = "";
-                td.className = "";
+                let div = document.createElement("div");
+                div.innerHTML = this.defaultImage;
+                td.appendChild(div);
                 td.onclick = this.play.bind(this);
                 tr.appendChild(td);
-                switch (matrix[i][j].show) {
-                    case "HIDDEN":
-                        td.innerHTML = this.defaultImage;
-                        break;
-                    case "SHOW":
-                        td.innerHTML = this.imageSet[matrix[i][j].value];
-                        break;
-                }
             }
             tbody.appendChild(tr);
         }
