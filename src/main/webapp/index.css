@@ -1,0 +1,55 @@
+table#myBoard, table#opBoard {
+    margin: 0 auto;
+    border-collapse: separate;
+    cursor: default;
+}
+
+form {
+    width: 320px;
+}
+
+table#myBoard td, table#opBoard td {
+    border: 1px solid black;
+    font-size: 50px;
+}
+
+td div {
+    transition: opacity 2s ease-in;
+    opacity: 1;
+}
+
+.close {
+    opacity: 0;
+}
+
+@keyframes FlipIn {
+    0% {
+        transform: rotateX(0);
+    }
+
+    100% {
+        transform: rotateX(-90deg);
+    }
+}
+
+@keyframes FlipOut {
+    0% {
+        transform: rotateX(-90deg);
+    }
+
+    100% {
+        transform: rotateX(0);
+    }
+}
+
+td div[data-animation="flip-in"] {
+    animation-name: FlipIn;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+}
+
+td div[data-animation="flip-out"] {
+    animation-name: FlipOut;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+}
