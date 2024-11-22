@@ -26,12 +26,13 @@ public class Endpoint {
     public void onOpen(Session session) throws IOException, EncodeException {
         if (s1 == null) {
             s1 = session;
-            s1.getBasicRemote().sendObject(new Message(ConnectionType.OPEN, Player.PLAYER1, null, null));
-        } else if (s2 == null) {
             game = new MemoryGame();
+            s1.getBasicRemote().sendObject(new Message(ConnectionType.OPEN, game, Player.PLAYER1, null));
+        } else if (s2 == null) {
             s2 = session;
-            s2.getBasicRemote().sendObject(new Message(ConnectionType.OPEN, Player.PLAYER2, null, null));
-            sendMessage(new Message(ConnectionType.MESSAGE, game.getTurn(), game.getBoard(), null));
+            game.init(10);
+            s2.getBasicRemote().sendObject(new Message(ConnectionType.OPEN, game, Player.PLAYER2, null));
+            sendMessage(new Message(ConnectionType.MESSAGE, game, null, null));
         } else {
             session.close();
         }
@@ -39,12 +40,13 @@ public class Endpoint {
 
     @OnMessage
     public void onMessage(Session session, Cell beginCell) throws IOException, EncodeException {
+        System.out.println(beginCell);
         try {
             Result ret = game.play(session == s1 ? Player.PLAYER1 : Player.PLAYER2, beginCell);
-            if (ret.winner() == Winner.NONE) {
-                sendMessage(new Message(ConnectionType.MESSAGE, game.getTurn(), game.getBoard(), null));
+            if (game.getWinner() == Winner.NONE) {
+                sendMessage(new Message(ConnectionType.MESSAGE, game, null, ret));
             } else {
-                sendMessage(new Message(ConnectionType.ENDGAME, null, game.getBoard(), ret.winner()));
+                sendMessage(new Message(ConnectionType.ENDGAME, game, null, ret));
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -61,14 +63,14 @@ public class Endpoint {
                     s2 = null;
                 }
             }
-            case 4001 -> {
+            case 1001, 4001 -> {
                 if (session == s1) {
                     s2.getBasicRemote()
-                            .sendObject(new Message(ConnectionType.ENDGAME, null, game.getBoard(), Winner.PLAYER2));
+                            .sendObject(new Message(ConnectionType.ENDGAME, game, null, null));
                     s1 = null;
                 } else {
                     s1.getBasicRemote()
-                            .sendObject(new Message(ConnectionType.ENDGAME, null, game.getBoard(), Winner.PLAYER1));
+                            .sendObject(new Message(ConnectionType.ENDGAME, game, null, null));
                     s2 = null;
                 }
             }

@@ -1,5 +1,5 @@
 package model;
 
-public record Result(Winner winner, int numOfPlays, Data card1, Data card2, boolean show) {
+public record Result(Cell card1, Cell card2, boolean show) {
     
 }

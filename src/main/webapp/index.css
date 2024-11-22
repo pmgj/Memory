@@ -1,14 +1,10 @@
-table#myBoard, table#opBoard {
+table#board {
     margin: 0 auto;
     border-collapse: separate;
     cursor: default;
 }
 
-form {
-    width: 320px;
-}
-
-table#myBoard td, table#opBoard td {
+table#board td {
     border: 1px solid black;
     font-size: 50px;
 }

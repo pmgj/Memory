@@ -1,9 +1,9 @@
 package sockets;
 
-import model.Data;
+import model.MemoryGame;
 import model.Player;
-import model.Winner;
+import model.Result;
 
-public record Message(ConnectionType type, Player turn, Data[][] board, Winner winner) {
+public record Message(ConnectionType type, MemoryGame game, Player turn, Result result) {
 
 }

@@ -8,8 +8,7 @@ public class MemoryGame {
     private int rows;
     private int cols;
     private Data[][] board;
-    private int numOfPlays;
-    private Data firstCell;
+    private Cell firstCell;
     private Player turn;
     private int score1;
     private int score2;
@@ -18,7 +17,6 @@ public class MemoryGame {
         this.rows = 0;
         this.cols = 0;
         this.board = null;
-        this.numOfPlays = 0;
         this.firstCell = null;
         this.turn = Player.PLAYER1;
         this.score1 = 0;
@@ -33,7 +31,7 @@ public class MemoryGame {
         var clone = new Data[rows][cols];
         for (var i = 0; i < this.rows; i++) {
             for (var j = 0; j < this.cols; j++) {
-                switch (clone[i][j].getShow()) {
+                switch (this.board[i][j].getShow()) {
                     case State.HIDDEN:
                         clone[i][j] = new Data(-1, State.HIDDEN);
                         break;
@@ -59,7 +57,6 @@ public class MemoryGame {
     }
 
     public Data[][] init(int n) {
-        this.numOfPlays = 0;
         var cell = this.computeMatrixDimensions(n * 2);
         this.rows = cell.x();
         this.cols = cell.y();
@@ -85,9 +82,10 @@ public class MemoryGame {
         }
     }
 
-    private Winner endOfGame() {
-        if(Arrays.stream(this.board).flatMap(o -> Arrays.stream(o)).allMatch(v -> v.getShow() == State.INVISIBLE)) {
-            return this.score1 > this.score2 ? Winner.PLAYER1 : this.score1 < this.score2 ? Winner.PLAYER2 : Winner.DRAW;
+    public Winner getWinner() {
+        if (Arrays.stream(this.board).flatMap(o -> Arrays.stream(o)).allMatch(v -> v.getShow() == State.INVISIBLE)) {
+            return this.score1 > this.score2 ? Winner.PLAYER1
+                    : this.score1 < this.score2 ? Winner.PLAYER2 : Winner.DRAW;
         }
         return Winner.NONE;
     }
@@ -98,37 +96,34 @@ public class MemoryGame {
         }
         Data cell = this.board[coords.x()][coords.y()];
         if (cell.getShow() == State.INVISIBLE) {
-            throw new IllegalArgumentException("Esta carta já foi descoberta.");
+            throw new IllegalArgumentException("This card was already discovered.");
         }
         if (cell.getShow() == State.SHOW) {
-            throw new IllegalArgumentException("Esta carta já está aberta.");
+            throw new IllegalArgumentException("This card is already open.");
         }
-        this.turn = (this.turn == Player.PLAYER1) ? Player.PLAYER2 : Player.PLAYER1;
-        if (cell.getShow() == State.HIDDEN) {
-            cell.setShow(State.SHOW);
-            if (this.firstCell != null) {
-                this.firstCell = cell;
-                return new Result(Winner.NONE, this.numOfPlays, cell, null, false);
-            } else {
-                this.numOfPlays++;
-                if (this.firstCell.getValue() == cell.getValue()) {
-                    if (this.turn == Player.PLAYER1) {
-                        this.score1++;
-                    } else {
-                        this.score2++;
-                    }
-                    cell.setShow(State.INVISIBLE);
-                    this.firstCell.setShow(State.INVISIBLE);
+        cell.setShow(State.SHOW);
+        if (this.firstCell == null) {
+            this.firstCell = coords;
+            return new Result(coords, null, false);
+        } else {
+            Data temp = this.board[this.firstCell.x()][this.firstCell.y()];
+            if (temp.getValue() == cell.getValue()) {
+                if (this.turn == Player.PLAYER1) {
+                    this.score1++;
                 } else {
-                    cell.setShow(State.HIDDEN);
-                    this.firstCell.setShow(State.HIDDEN);
+                    this.score2++;
                 }
-                var c1 = this.firstCell;
-                var c2 = cell;
-                this.firstCell = null;
-                return new Result(this.endOfGame(), this.numOfPlays, c1, c2, c1.getShow() == State.INVISIBLE);
+                cell.setShow(State.INVISIBLE);
+                temp.setShow(State.INVISIBLE);
+            } else {
+                cell.setShow(State.HIDDEN);
+                temp.setShow(State.HIDDEN);
             }
+            var c1 = this.firstCell;
+            var c2 = coords;
+            this.firstCell = null;
+            this.turn = this.turn == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1;
+            return new Result(c1, c2, cell.getShow() == State.INVISIBLE);
         }
-        return new Result(Winner.NONE, this.numOfPlays, null, null, false);
     }
 }
