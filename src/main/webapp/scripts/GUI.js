@@ -36,10 +36,10 @@ class GUI {
         this.habilitar(true);
     }
     mostrar(data) {
-        // if (data instanceof PointerEvent) {
-        //     return;
-        // }
         let ret = data.result;
+        if (!ret) {
+            return;
+        }
         if (ret.card2 === undefined) {
             this.animation(this.getTableCell(ret.card1.cell).firstChild, this.imageSet[ret.card1.value]);
         } else {
@@ -53,15 +53,23 @@ class GUI {
             if (data.game.winner === "NONE") {
                 this.habilitar(false);
                 setTimeout(this.buscar.bind(this, td1.firstChild, td2.firstChild), 2000);
-            } else {
-                let msg = document.getElementById("message");
-                msg.textContent = "Game over! You win!";
             }
+        }
+    }
+    updateScores(data) {
+        let [score1, score2] = data.game.scores;
+        let myScore = document.querySelector("#myScore");
+        let opScore = document.querySelector("#opScore");
+        if (this.player === "PLAYER1") {
+            myScore.textContent = score1;
+            opScore.textContent = score2;
+        } else {
+            opScore.textContent = score1;
+            myScore.textContent = score2;
         }
     }
     readData(evt) {
         let data = JSON.parse(evt.data);
-        console.log(data);
         switch (data.type) {
             case "OPEN":
                 /* Informando cor da peça do usuário atual */
@@ -76,13 +84,15 @@ class GUI {
                 } else {
                     this.printBoard(data.game);
                 }
+                this.updateScores(data);
                 this.setMessage(data.game.turn === this.player ? "Your turn." : "Opponent's turn.");
                 break;
             case "ENDGAME":
                 /* Fim do jogo */
-                this.printBoard(data.game);
+                this.mostrar(data);
+                this.updateScores(data);
                 this.ws.close(this.closeCodes.ENDGAME.code, this.closeCodes.ENDGAME.description);
-                this.endGame(data.winner);
+                this.endGame(data.result ? data.game.winner : this.player);
                 break;
         }
     }
@@ -97,15 +107,8 @@ class GUI {
         button.value = on ? "Start" : "Quit";
     }
     clearBoard() {
-        let innerClean = id => {
-            let cells = document.querySelectorAll(id);
-            cells.forEach(td => {
-                td.innerHTML = "";
-                td.className = "";
-                td.onclick = undefined;
-            });
-        };
-        innerClean("table#board td");
+        let table = document.querySelectorAll("table#board");
+        table.innerHTML = "";
     }
     unsetEvents() {
         let innerUnset = id => {

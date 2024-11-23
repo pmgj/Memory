@@ -40,7 +40,6 @@ public class Endpoint {
 
     @OnMessage
     public void onMessage(Session session, Cell beginCell) throws IOException, EncodeException {
-        System.out.println(beginCell);
         try {
             Result ret = game.play(session == s1 ? Player.PLAYER1 : Player.PLAYER2, beginCell);
             if (game.getWinner() == Winner.NONE) {

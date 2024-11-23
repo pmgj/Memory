@@ -49,3 +49,7 @@ td div[data-animation="flip-out"] {
     animation-duration: 250ms;
     animation-timing-function: ease-in;
 }
+
+#scores th, #scores td {
+    text-align: center;
+}

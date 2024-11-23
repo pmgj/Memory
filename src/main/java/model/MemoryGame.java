@@ -27,6 +27,10 @@ public class MemoryGame {
         return turn;
     }
 
+    public int[] getScores() {
+        return new int[] { this.score1, this.score2 };
+    }
+
     public Data[][] getBoard() {
         var clone = new Data[rows][cols];
         for (var i = 0; i < this.rows; i++) {
@@ -83,7 +87,8 @@ public class MemoryGame {
     }
 
     public Winner getWinner() {
-        if (this.board != null && Arrays.stream(this.board).flatMap(o -> Arrays.stream(o)).allMatch(v -> v.getShow() == State.INVISIBLE)) {
+        if (this.board != null && Arrays.stream(this.board).flatMap(o -> Arrays.stream(o))
+                .allMatch(v -> v.getShow() == State.INVISIBLE)) {
             return this.score1 > this.score2 ? Winner.PLAYER1
                     : this.score1 < this.score2 ? Winner.PLAYER2 : Winner.DRAW;
         }
@@ -117,11 +122,11 @@ public class MemoryGame {
             } else {
                 cell.setShow(State.HIDDEN);
                 this.firstCell.setShow(State.HIDDEN);
+                this.turn = this.turn == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1;
             }
             var c1 = this.firstCell;
             var c2 = cell;
             this.firstCell = null;
-            this.turn = this.turn == Player.PLAYER1 ? Player.PLAYER2 : Player.PLAYER1;
             return new Result(c1, c2, cell.getShow() == State.INVISIBLE);
         }
     }
